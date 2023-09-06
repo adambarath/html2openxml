@@ -1,4 +1,4 @@
-/* Copyright (C) Olivier Nizet https://github.com/onizet/html2openxml - All Rights Reserved
+﻿/* Copyright (C) Olivier Nizet https://github.com/onizet/html2openxml - All Rights Reserved
  * 
  * This source is subject to the Microsoft Permissive License.
  * Please see the License.txt file for more information.
@@ -519,7 +519,7 @@ namespace HtmlToOpenXml
         private string GetStyleIdForListItem(HtmlEnumerator en) 
         { 
             return GetStyleIdFromClasses(en.Attributes.GetAsClass()) 
-                   ?? GetStyleIdFromClasses(htmlStyles.NumberingList.GetCurrentListClasses) 
+                   ?? GetStyleIdFromClasses(htmlStyles.NumberingList.CurrentListClasses) 
                    ?? htmlStyles.DefaultStyles.ListParagraphStyle; 
         }
 
