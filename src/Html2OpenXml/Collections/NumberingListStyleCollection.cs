@@ -68,8 +68,20 @@ namespace HtmlToOpenXml
 
         #region InitNumberingIds
 
+        private Indentation CreateIndentation(int levelIndex)
+        {
+            return new Indentation()
+            {
+                // levelindex 0 kihuzta a lap bal szelere
+                //Left = (360 * (levelIndex + 1)).ToString(CultureInfo.InvariantCulture),
+                //Hanging = null,//levelIndex < 1 ? "780" : "0",
+            };
+        }
+
         private Level CreateLevel(NumberFormatValues numberFormat, string levelText, int levelIndex, bool cascading = false)
         {
+            // Console.WriteLine($"CreateLevel {levelIndex}");
+
             var lvl = new Level
             {
                 LevelText = new LevelText() { Val = levelText },
@@ -77,7 +89,7 @@ namespace HtmlToOpenXml
                 LevelIndex = levelIndex,
                 PreviousParagraphProperties = new PreviousParagraphProperties
                 {
-                    Indentation = new Indentation() { Left = (720 * levelIndex).ToString(CultureInfo.InvariantCulture), Hanging = "360" }
+                    Indentation = CreateIndentation(levelIndex),
                 },
             };
 
@@ -533,7 +545,10 @@ namespace HtmlToOpenXml
                     lvlText.AppendFormat("%{0}.", lvlIndex);
 
                 level.LevelText = new LevelText() { Val = lvlText.ToString() };
-                level.PreviousParagraphProperties = new PreviousParagraphProperties() { Indentation = new Indentation() };
+                level.PreviousParagraphProperties = new PreviousParagraphProperties()
+                {
+                    Indentation = CreateIndentation(levelIndex),
+                };
             }
 
             absNum.Append(level);
