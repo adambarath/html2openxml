@@ -1,4 +1,4 @@
-/* Copyright (C) Olivier Nizet https://github.com/onizet/html2openxml - All Rights Reserved
+﻿/* Copyright (C) Olivier Nizet https://github.com/onizet/html2openxml - All Rights Reserved
  * 
  * This source is subject to the Microsoft Permissive License.
  * Please see the License.txt file for more information.
@@ -139,7 +139,7 @@ namespace HtmlToOpenXml
 
         private void InitNumberingIds()
         {
-            NumberingDefinitionsPart numberingPart = mainPart.NumberingDefinitionsPart;
+            NumberingDefinitionsPart numberingPart = mainPart!.NumberingDefinitionsPart!;
             int absNumIdRef = 0;
 
             // Ensure the numbering.xml file exists or any numbering or bullets list will results
@@ -147,7 +147,7 @@ namespace HtmlToOpenXml
             if (numberingPart == null)
                 numberingPart = numberingPart = mainPart.AddNewPart<NumberingDefinitionsPart>();
 
-            if (mainPart.NumberingDefinitionsPart.Numbering == null)
+            if (mainPart.NumberingDefinitionsPart?.Numbering == null)
             {
                 new Numbering().Save(numberingPart);
             }
@@ -177,7 +177,7 @@ namespace HtmlToOpenXml
                 {
                     // Check if we can find this in the existing document
                     addNewAbstractNums = addNewAbstractNums
-                       || !existingAbstractNums.Any(a => a.AbstractNumDefinitionName != null && a.AbstractNumDefinitionName.Val.Value == abstractNum.AbstractNumDefinitionName.Val.Value);
+                       || !existingAbstractNums.Any(a => a.AbstractNumDefinitionName != null && a.AbstractNumDefinitionName?.Val?.Value == abstractNum.AbstractNumDefinitionName?.Val?.Value);
                 }
             }
             else
@@ -201,7 +201,7 @@ namespace HtmlToOpenXml
                     }
                 }
 
-                lastAbsNumIndex = lastAbsNumIndex == -1 ? 0 : lastAbsNumIndex;
+                lastAbsNumIndex = Math.Max(lastAbsNumIndex, 0);
 
                 for (int i = 0; i < absNumChildren.Length; i++)
                     numberingPart.Numbering.InsertAt(absNumChildren[i], i + lastAbsNumIndex);
@@ -222,9 +222,9 @@ namespace HtmlToOpenXml
             var numberingPart = mainPart.NumberingDefinitionsPart;
 
             var id = 1;
-            foreach (var inst in numberingPart.Numbering.Elements<NumberingInstance>())
+            foreach (var inst in numberingPart?.Numbering?.Elements<NumberingInstance>() ?? Enumerable.Empty<NumberingInstance>())
             {
-                if (inst.NumberID.HasValue && inst.NumberID.Value > id) id = inst.NumberID;
+                if (inst.NumberID != null && inst.NumberID > id) id = inst.NumberID;
             }
 
             return id;
@@ -235,9 +235,9 @@ namespace HtmlToOpenXml
             var numberingPart = mainPart.NumberingDefinitionsPart;
 
             var id = 0;
-            foreach (var abs in numberingPart.Numbering.Elements<AbstractNum>())
+            foreach (var abs in numberingPart?.Numbering?.Elements<AbstractNum>() ?? Enumerable.Empty<AbstractNum>())
             {
-                if (abs.AbstractNumberId.HasValue && abs.AbstractNumberId > id) id = abs.AbstractNumberId;
+                if (abs.AbstractNumberId != null && abs.AbstractNumberId > id) id = abs.AbstractNumberId;
             }
 
             return id;
@@ -302,13 +302,13 @@ namespace HtmlToOpenXml
         {
             if (headingNumberingId == default(int))
             {
-                int absNumberId = GetAbstractNumberIdFromType(HEADING_NUMBERING_NAME, true).AbstractNumberId.Value;
+                int absNumberId = GetAbstractNumberIdFromType(HEADING_NUMBERING_NAME, true)!.AbstractNumberId!.Value;
 
-                var existingTitleNumbering = mainPart.NumberingDefinitionsPart.Numbering
+                var existingTitleNumbering = mainPart.NumberingDefinitionsPart!.Numbering!
                     .Elements<NumberingInstance>()
-                    .FirstOrDefault(n => n != null && n.AbstractNumId.Val == absNumberId);
+                    .FirstOrDefault(n => n != null && n.AbstractNumId!.Val! == absNumberId);
 
-                if (existingTitleNumbering != null)
+                if (existingTitleNumbering?.NumberID != null)
                 {
                     headingNumberingId = existingTitleNumbering.NumberID.Value;
                 }
@@ -374,7 +374,7 @@ namespace HtmlToOpenXml
                         EnsureMultilevel(absNumId);
                     }
 
-                    var numbering = mainPart.NumberingDefinitionsPart.Numbering;
+                    var numbering = mainPart.NumberingDefinitionsPart!.Numbering;
 
                     var absNum = AbstractNums.FirstOrDefault(a => a.AbstractNumberId.Value == absNumId);
 
@@ -460,11 +460,11 @@ namespace HtmlToOpenXml
 
             if (absNum != null)
             {
-                var numbering = mainPart.NumberingDefinitionsPart.Numbering;
+                var numbering = mainPart.NumberingDefinitionsPart!.Numbering;
                 var clone = CloneAbstractNum(absNum);
 
                 var currentNumId = ++nextInstanceID;
-                numbering.Append(new NumberingInstance(new AbstractNumId() { Val = clone.AbstractNumberId.Value }) { NumberID = currentNumId });
+                numbering.Append(new NumberingInstance(new AbstractNumId() { Val = clone.AbstractNumberId!.Value }) { NumberID = currentNumId });
 
                 numbering.Save(mainPart.NumberingDefinitionsPart);
                 numbering.Reload();
@@ -476,7 +476,7 @@ namespace HtmlToOpenXml
 
         private AbstractNum CloneAbstractNum(AbstractNum absNum)
         {
-            var numbering = mainPart.NumberingDefinitionsPart.Numbering;
+            var numbering = mainPart.NumberingDefinitionsPart!.Numbering;
 
             var lvl = absNum.GetFirstChild<Level>();
             var currentNumId = GetMaxAbstractId() + 1;
