@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Diagnostics;
 using DocumentFormat.OpenXml;
@@ -15,7 +15,10 @@ namespace Demo
         static void Main(string[] args)
         {
             const string filename = "test.docx";
+            /*
             string html = ResourceHelper.GetString("Resources.CompleteRunTest.html");
+            // */
+            string html = ResourceHelper.GetString("Resources.NumberingList.htm");
             if (File.Exists(filename)) File.Delete(filename);
 
             using (MemoryStream generatedDocument = new MemoryStream())
