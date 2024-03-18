@@ -869,6 +869,8 @@ namespace HtmlToOpenXml
             }
             else
             {
+                //
+                /*
                 var styleBorder = en.StyleAttributes.GetAsBorder("border");
                 if (!styleBorder.IsEmpty)
                 {
@@ -883,6 +885,7 @@ namespace HtmlToOpenXml
                     if (styleBorder.Bottom.IsValid)
                         properties.TableBorders.BottomBorder = new BottomBorder { Val = styleBorder.Bottom.Style, Color = StringValue.FromString(styleBorder.Bottom.Color.ToHexString()), Size = (uint)styleBorder.Bottom.Width.ValueInDxa };
                 }
+                // */
             }            
 
             Unit unit = en.StyleAttributes.GetAsUnit("width");
@@ -1205,6 +1208,8 @@ namespace HtmlToOpenXml
                 properties.TableCellMargin = cellMargin;
             }
 
+            //
+            /*
             var border = en.StyleAttributes.GetAsBorder("border");
             if (!border.IsEmpty)
             {
@@ -1219,6 +1224,7 @@ namespace HtmlToOpenXml
                 if (border.Bottom.IsValid)
                     properties.TableCellBorders.BottomBorder = new BottomBorder { Val = border.Bottom.Style, Color = StringValue.FromString(border.Bottom.Color.ToHexString()), Size = (uint)border.Bottom.Width.ValueInDxa };
             }
+            // */
 
             htmlStyles.Tables.ProcessCommonAttributes(en, runStyleAttributes);
             if (styleAttributes.Count > 0)
