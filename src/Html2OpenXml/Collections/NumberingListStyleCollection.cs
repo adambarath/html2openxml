@@ -73,8 +73,8 @@ namespace HtmlToOpenXml
             return new Indentation()
             {
                 // levelindex 0 kihuzta a lap bal szelere
-                //Left = (360 * (levelIndex + 1)).ToString(CultureInfo.InvariantCulture),
-                //Hanging = null,//levelIndex < 1 ? "780" : "0",
+                Left = (1 * (levelIndex + 1)).ToString(CultureInfo.InvariantCulture),
+                Hanging = "0",//levelIndex < 1 ? "780" : "0",
             };
         }
 
@@ -87,6 +87,7 @@ namespace HtmlToOpenXml
                 LevelText = new LevelText() { Val = levelText },
                 NumberingFormat = new NumberingFormat() { Val = numberFormat },
                 LevelIndex = levelIndex,
+                
                 PreviousParagraphProperties = new PreviousParagraphProperties
                 {
                     Indentation = CreateIndentation(levelIndex),
@@ -545,7 +546,7 @@ namespace HtmlToOpenXml
                     lvlText.AppendFormat("%{0}.", lvlIndex);
 
                 level.LevelText = new LevelText() { Val = lvlText.ToString() };
-                level.PreviousParagraphProperties = new PreviousParagraphProperties()
+                level.PreviousParagraphProperties = new PreviousParagraphProperties
                 {
                     Indentation = CreateIndentation(levelIndex),
                 };
